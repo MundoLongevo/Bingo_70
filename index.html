@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bingo 70+ · Ricardo de Faria Barros</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --laranja:#F4631E; --amarelo:#FFD166; --verde:#06D6A0;
+  --azul:#60C0D8; --roxo:#B57EE8; --rosa:#FF6B9D;
+  --creme:#FFF8EE; --escuro:#1A1A2E;
+  --sol-e:#7BA7BC; --sol-f:#8A9E7B; --sol-s:#C4956A; --sol-x:#9B7DB6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--creme);
+  background-image:radial-gradient(circle at 12% 18%,rgba(244,99,30,.08) 0%,transparent 50%),
+  radial-gradient(circle at 88% 82%,rgba(155,125,182,.08) 0%,transparent 50%);
+  min-height:100vh;padding:20px 14px 50px}
+
+/* HEADER */
+header{text-align:center;margin-bottom:24px}
+.badge{display:inline-block;background:var(--laranja);color:#fff;font-size:10px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:10px}
+h1{font-family:'Fraunces',serif;font-size:clamp(2.2rem,6vw,3.8rem);font-weight:900;
+  color:var(--escuro);line-height:1.05;margin-bottom:6px}
+h1 span{color:var(--laranja);font-style:italic}
+.tagline{font-size:.95rem;color:#666;max-width:560px;margin:0 auto 6px;line-height:1.55}
+.autoria{font-size:.78rem;color:#aaa;font-style:italic;margin-bottom:0}
+
+/* SCORE */
+.score-bar{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:20px 0}
+.score-block{background:#fff;border:3px solid var(--escuro);border-radius:14px;
+  padding:8px 18px;box-shadow:4px 4px 0 var(--escuro);text-align:center;min-width:90px}
+.score-label{font-size:.68rem;color:#999;font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.score-num{font-family:'Fraunces',serif;font-size:1.9rem;font-weight:900;line-height:1.1}
+.c1{color:var(--laranja)} .c2{color:var(--sol-x)} .ct{color:var(--escuro)}
+.reset-btn{background:var(--escuro);color:#fff;border:none;border-radius:12px;padding:11px 20px;
+  font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;cursor:pointer;
+  transition:transform .1s,box-shadow .1s;box-shadow:3px 3px 0 var(--laranja)}
+.reset-btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--laranja)}
+.reset-btn:active{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--laranja)}
+
+/* SECTION */
+.sec-wrap{max-width:1100px;margin:0 auto}
+.sec-head{display:flex;align-items:center;gap:14px;margin:38px 0 14px}
+.sec-line{flex:1;height:2px;background:var(--escuro);opacity:.1;border-radius:2px}
+.sec-title{font-family:'Fraunces',serif;font-size:clamp(1rem,2.5vw,1.45rem);
+  font-weight:900;color:var(--escuro);white-space:nowrap}
+.sec-title em{font-style:italic;color:var(--laranja)}
+.sec-sub{font-size:.82rem;color:#777;line-height:1.55;text-align:center;margin-bottom:16px;padding:0 4px}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:14px}
+.leg{display:flex;align-items:center;gap:5px;font-size:.69rem;font-weight:700;color:#555}
+.dot{width:12px;height:12px;border-radius:3px;border:2px solid var(--escuro);flex-shrink:0}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:4px}
+
+/* CARD */
+.card{background:#fff;border:2.5px solid var(--escuro);border-radius:12px;
+  padding:11px 8px;text-align:center;cursor:pointer;
+  transition:transform .17s,box-shadow .17s;box-shadow:3px 3px 0 var(--escuro);
+  position:relative;overflow:hidden;min-height:105px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  user-select:none}
+.card.sol{background:#F8F4F1}
+.card::before{content:'';position:absolute;inset:0;background:var(--cc,#FFD166);
+  opacity:0;transition:opacity .28s;border-radius:10px}
+.card:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--escuro)}
+.card.on::before{opacity:1}
+.card.on{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--escuro)}
+.card-verb{font-size:.54rem;font-weight:800;letter-spacing:.8px;
+  text-transform:uppercase;color:#bbb;position:relative;z-index:1}
+.card.on .card-verb{color:rgba(26,26,46,.45)}
+.card-meta{font-size:.52rem;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+  padding:2px 6px;border-radius:5px;border:1.5px solid currentColor;
+  position:relative;z-index:1;opacity:.55}
+.card-emoji{font-size:1.6rem;position:relative;z-index:1;transition:transform .28s}
+.card.on .card-emoji{transform:scale(1.25) rotate(-5deg)}
+.card-text{font-size:.66rem;font-weight:700;color:var(--escuro);
+  line-height:1.3;position:relative;z-index:1}
+.chk{position:absolute;top:5px;right:5px;width:20px;height:20px;
+  background:var(--escuro);border-radius:50%;display:flex;align-items:center;
+  justify-content:center;color:var(--amarelo);font-size:10px;
+  opacity:0;transform:scale(0);transition:all .28s cubic-bezier(.34,1.56,.64,1);z-index:2}
+.card.on .chk{opacity:1;transform:scale(1)}
+
+/* RESULT */
+.result-zone{max-width:1100px;margin:26px auto;text-align:center;min-height:68px;
+  display:flex;align-items:center;justify-content:center}
+.result-box{background:#fff;border:3px solid var(--escuro);border-radius:18px;
+  padding:14px 28px;box-shadow:5px 5px 0 var(--escuro);
+  display:none;flex-direction:column;gap:4px;
+  animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+.result-box.vis{display:flex}
+.r-title{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:900;color:var(--escuro)}
+.r-sub{font-size:.87rem;color:#555}
+
+/* FOOTER */
+footer{text-align:center;font-size:.72rem;color:#bbb;max-width:1100px;
+  margin:10px auto 0;line-height:1.7}
+
+/* ANIMATIONS */
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.bounce{animation:bounce .42s ease}
+.confetti-piece{position:fixed;width:9px;height:9px;border-radius:2px;
+  animation:cfall 2s ease-in forwards;pointer-events:none;z-index:999}
+@keyframes cfall{0%{transform:translateY(-20px) rotate(0);opacity:1}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+@media(max-width:820px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:520px){.grid{grid-template-columns:repeat(3,1fr)}.card{min-height:90px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">✨ Longeslescência em jogo</div>
+  <h1>Bingo <span>70+</span></h1>
+  <p class="tagline">70 casas. Uma vida ativa, positiva, combativa e plena de sentido.<br>Marque o que é seu — tanto o que te faz brilhar quanto o que você decidiu transformar.</p>
+  <p class="autoria">Autoria: Ricardo de Faria Barros · Psicólogo · Longeslescência</p>
+</header>
+
+<div class="score-bar">
+  <div class="score-block">
+    <div class="score-label">Verbos da Vida</div>
+    <div class="score-num c1"><span id="c1">0</span><small style="font-size:.95rem;color:#ccc">/35</small></div>
+  </div>
+  <div class="score-block">
+    <div class="score-label">As 4 Solidões</div>
+    <div class="score-num c2"><span id="c2">0</span><small style="font-size:.95rem;color:#ccc">/35</small></div>
+  </div>
+  <div class="score-block">
+    <div class="score-label">Total 70+</div>
+    <div class="score-num ct"><span id="ct">0</span><small style="font-size:.95rem;color:#ccc">/70</small></div>
+  </div>
+  <button class="reset-btn" onclick="resetAll()">🔄 Recomeçar</button>
+</div>
+
+<!-- BLOCO 1 -->
+<div class="sec-wrap">
+  <div class="sec-head">
+    <div class="sec-line"></div>
+    <div class="sec-title">Bloco 1 · <em>Os 11 Verbos da Vida</em></div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-sub">Marque as afirmações que combinam com você. Cada casa marcada é prova de que a vida continua sendo vivida com gosto.</p>
+  <div class="legend">
+    <div class="leg"><div class="dot" style="background:#FFD166"></div>Conhecer · Conviver</div>
+    <div class="leg"><div class="dot" style="background:#06D6A0"></div>Criar · Colaborar · Cuidar</div>
+    <div class="leg"><div class="dot" style="background:#FF6B9D"></div>Comemorar · Compartilhar</div>
+    <div class="leg"><div class="dot" style="background:#60C0D8"></div>Conversar · Comparecer</div>
+    <div class="leg"><div class="dot" style="background:#B57EE8"></div>Começar · Cativar</div>
+  </div>
+  <div class="grid" id="g1"></div>
+</div>
+
+<!-- BLOCO 2 -->
+<div class="sec-wrap">
+  <div class="sec-head">
+    <div class="sec-line"></div>
+    <div class="sec-title">Bloco 2 · <em>As 4 Solidões</em></div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-sub">Aqui o bingo muda de tom — mas não de coragem. Marque o que você já superou, o que reconhece em si mesmo ou o que decidiu transformar.</p>
+  <div class="legend">
+    <div class="leg"><div class="dot" style="background:#7BA7BC"></div>Solidão Estrutural · cidade que não te cabe</div>
+    <div class="leg"><div class="dot" style="background:#8A9E7B"></div>Solidão Funcional · invisível no grupinho</div>
+    <div class="leg"><div class="dot" style="background:#C4956A"></div>Solidão Social · rodeado(a) e só</div>
+    <div class="leg"><div class="dot" style="background:#9B7DB6"></div>Solidão Existencial · espinhos no lugar de flores</div>
+  </div>
+  <div class="legend" style="margin-top:-6px">
+    <div class="leg"><div class="dot" style="background:#e8dfc8;border-color:#aaa"></div>🫙 Cristaleira</div>
+    <div class="leg"><div class="dot" style="background:#d5dce0;border-color:#aaa"></div>🗄️ Arquivo-Morto</div>
+    <div class="leg"><div class="dot" style="background:#f0dde8;border-color:#aaa"></div>🎊 Pano de Confetes</div>
+    <div class="leg"><div class="dot" style="background:#e5ddf5;border-color:#aaa"></div>🏺 Antiquário</div>
+  </div>
+  <div class="grid" id="g2"></div>
+</div>
+
+<div class="result-zone">
+  <div class="result-box" id="rbox">
+    <div class="r-title" id="rtitle"></div>
+    <div class="r-sub" id="rsub"></div>
+  </div>
+</div>
+
+<footer>
+  <strong>Bingo 70+</strong> · Dinâmica Longeslescência · Os 11 Verbos da Vida Plena · As 4 Solidões · As Metáforas que nos Revelam<br>
+  © Ricardo de Faria Barros · Psicólogo · Especialização em Psicologia Positiva · Logoterapia
+</footer>
+
+<script>
+const B1 = [
+  {v:"Conhecer",      e:"🗺️", t:"Já visitei um lugar novo esse ano — só pra conhecer",                                      c:"#FFD16699"},
+  {v:"Conhecer",      e:"📚", t:"Estou lendo (ou ouvindo) um livro novo agora mesmo",                                        c:"#FFD16699"},
+  {v:"Conhecer",      e:"🤝", t:"Fiz amizade com alguém de uma geração diferente da minha",                                 c:"#FFD16699"},
+  {v:"Conhecer",      e:"🌐", t:"Aprendi a usar uma tecnologia nova sem pedir socorro a ninguém",                            c:"#FFD16699"},
+  {v:"Conviver",      e:"🏠", t:"Gosto de receber em casa. Porta aberta pra quem vier!",                                    c:"#FFD16699"},
+  {v:"Conviver",      e:"🌳", t:"Passei num parque ou praça só pra estar com gente",                                        c:"#FFD16699"},
+  {v:"Conviver",      e:"🎲", t:"Joguei baralho, dominó, xadrez ou jogo de mesa recentemente",                              c:"#FFD16699"},
+  {v:"Criar",         e:"🎨", t:"Faço algo com as mãos: cozinhar, pintar, cultivar, artesanato…",                          c:"#06D6A099"},
+  {v:"Criar",         e:"✍️", t:"Já escrevi algo só por prazer: carta, poesia, diário, mensagem…",                         c:"#06D6A099"},
+  {v:"Criar",         e:"🌱", t:"Tenho um cantinho com plantas que eu mesmo(a) cuido",                                      c:"#06D6A099"},
+  {v:"Colaborar",     e:"🏘️", t:"Pode me chamar pra reunião de condomínio. Eu apareço.",                                   c:"#06D6A099"},
+  {v:"Colaborar",     e:"🙋", t:"Já fui voluntário(a) em algo que importava pra mim",                                      c:"#06D6A099"},
+  {v:"Colaborar",     e:"💡", t:"Já ajudei alguém mais jovem com minha experiência de vida",                                c:"#06D6A099"},
+  {v:"Cuidar",        e:"🩺", t:"Faço meu check-up em dia — corpo e mente, sem enrolar",                                   c:"#06D6A099"},
+  {v:"Cuidar",        e:"😴", t:"Durmo bem. O sono é sagrado pra mim.",                                                    c:"#06D6A099"},
+  {v:"Cuidar",        e:"🏋️", t:"Tenho atividade física regular — e faço com prazer, não com culpa",                      c:"#06D6A099"},
+  {v:"Comemorar",     e:"🎂", t:"Não perco nenhuma comemoração. Sou presença garantida!",                                  c:"#FF6B9D99"},
+  {v:"Comemorar",     e:"🥂", t:"Comemoro as pequenas conquistas do dia a dia",                                             c:"#FF6B9D99"},
+  {v:"Comemorar",     e:"🎊", t:"Tenho um ritual semanal pra marcar a semana com alegria",                                  c:"#FF6B9D99"},
+  {v:"Compartilhar",  e:"🍽️", t:"Preparo uma comida especial pra alguém de vez em quando",                                 c:"#FF6B9D99"},
+  {v:"Compartilhar",  e:"📸", t:"Compartilho fotos e histórias da minha vida com quem ama",                                c:"#FF6B9D99"},
+  {v:"Compartilhar",  e:"🎵", t:"Já indiquei uma música, série ou livro pra alguém essa semana",                           c:"#FF6B9D99"},
+  {v:"Conversar",     e:"📞", t:"Telefono pros filhos (ou amigos) só pra saber como estão — sem motivo especial",           c:"#60C0D899"},
+  {v:"Conversar",     e:"☕", t:"Tenho pelo menos um(a) amigo(a) com quem falo de verdade",                                c:"#60C0D899"},
+  {v:"Conversar",     e:"🗣️", t:"Já contei uma história da minha vida pra alguém que realmente queria ouvir",             c:"#60C0D899"},
+  {v:"Comparecer",    e:"⛪", t:"Tenho um compromisso semanal que não abro mão de estar presente",                          c:"#60C0D899"},
+  {v:"Comparecer",    e:"🎭", t:"Fui a um show, espetáculo ou evento cultural no último ano",                               c:"#60C0D899"},
+  {v:"Comparecer",    e:"🏃", t:"Apareço nas caminhadas, encontros e atividades do grupo",                                  c:"#60C0D899"},
+  {v:"Começar",       e:"🎸", t:"Tenho algo que sempre quis aprender — e vou começar em breve",                            c:"#B57EE899"},
+  {v:"Começar",       e:"🔑", t:"Já comecei algo novo depois dos 50. E não me arrependo.",                                 c:"#B57EE899"},
+  {v:"Começar",       e:"📅", t:"Tenho um plano — mesmo pequeno — para os próximos meses",                                 c:"#B57EE899"},
+  {v:"Cativar",       e:"😄", t:"Já fiz alguém rir hoje. De propósito.",                                                   c:"#B57EE899"},
+  {v:"Cativar",       e:"💌", t:"Mandei uma mensagem carinhosa só pra dizer que estava pensando na pessoa",                 c:"#B57EE899"},
+  {v:"Cativar",       e:"🌟", t:"As crianças (ou jovens) da família gostam de me ter por perto",                           c:"#B57EE899"},
+  {v:"Cativar",       e:"🙏", t:"Me sinto grato(a) com a vida que estou vivendo — hoje, agora",                            c:"#B57EE899"},
+];
+
+const B2 = [
+  // ESTRUTURAL (9)
+  {v:"Solidão Estrutural", m:"",                  e:"🚦", t:"Já perdi o semáforo no meio da travessia — o sinal não esperou por mim",              c:"#7BA7BC88"},
+  {v:"Solidão Estrutural", m:"🗄️ Arquivo-Morto",  e:"🪑", t:"Sinto que certos espaços foram projetados como se eu fosse deixar de existir",        c:"#7BA7BC88"},
+  {v:"Solidão Estrutural", m:"🏺 Antiquário",      e:"🚌", t:"Já fui tratado(a) como peça de museu: apreciado(a) de longe, não incluído(a) na roda", c:"#7BA7BC88"},
+  {v:"Solidão Estrutural", m:"🫙 Cristaleira",     e:"🏙️", t:"Guardei planos 'pra quando a cidade melhorar' — e o tempo foi passando",              c:"#7BA7BC88"},
+  {v:"Solidão Estrutural", m:"",                  e:"🛗", t:"Já deixei de ir a algum lugar porque o acesso tornava tudo complicado demais",          c:"#7BA7BC88"},
+  {v:"Solidão Estrutural", m:"🎊 Pano de Confetes",e:"🎉", t:"A cidade não fez uma festa pra mim — mas eu aprendi a fazer a minha",                  c:"#7BA7BC88"},
+  {v:"Solidão Estrutural", m:"",                  e:"🌆", t:"A cidade anda mais rápido do que eu — e decidi seguir o meu ritmo mesmo assim",         c:"#7BA7BC88"},
+  {v:"Solidão Estrutural", m:"🏺 Antiquário",      e:"🔦", t:"Me reconheço valioso(a) demais pra ficar guardado(a) numa vitrine — prefiro circular",  c:"#7BA7BC88"},
+  {v:"Solidão Estrutural", m:"🗄️ Arquivo-Morto",  e:"📋", t:"Já fui tratado(a) como número numa fila em vez de pessoa com história",                c:"#7BA7BC88"},
+  // FUNCIONAL (9)
+  {v:"Solidão Funcional",  m:"",                  e:"💬", t:"Já estive numa sala e percebi que o almoço aconteceu — sem mim",                        c:"#8A9E7B88"},
+  {v:"Solidão Funcional",  m:"📱 Grupo",           e:"📱", t:"Já fiquei de fora de um grupo sem saber por quê — e isso doeu mais do que eu esperava", c:"#8A9E7B88"},
+  {v:"Solidão Funcional",  m:"🗄️ Arquivo-Morto",  e:"🗂️", t:"Minha experiência foi tratada como arquivo-morto: útil no passado, ignorada agora",    c:"#8A9E7B88"},
+  {v:"Solidão Funcional",  m:"🏺 Antiquário",      e:"🪞", t:"Já fui elogiado(a) pelo que fui, não pelo que sou — como quem admira uma foto antiga",  c:"#8A9E7B88"},
+  {v:"Solidão Funcional",  m:"🫙 Cristaleira",     e:"🍷", t:"Guardei minha capacidade pra 'uma boa oportunidade' — que nunca foi oferecida",         c:"#8A9E7B88"},
+  {v:"Solidão Funcional",  m:"🎊 Pano de Confetes",e:"🎈", t:"Guardei minha animação porque ninguém mais parecia querer celebrar comigo",              c:"#8A9E7B88"},
+  {v:"Solidão Funcional",  m:"",                  e:"🤫", t:"Já fui à reunião da qual não fui avisado(a) — fui por conta própria mesmo assim",        c:"#8A9E7B88"},
+  {v:"Solidão Funcional",  m:"🗄️ Arquivo-Morto",  e:"💼", t:"Senti que meu papel havia sido arquivado antes de eu ter terminado de escrevê-lo",      c:"#8A9E7B88"},
+  {v:"Solidão Funcional",  m:"",                  e:"🪑", t:"Já ocupei espaço fisicamente e percebi que estava ausente de verdade",                   c:"#8A9E7B88"},
+  // SOCIAL (9)
+  {v:"Solidão Social",     m:"",                  e:"🎂", t:"Já estive no meu próprio aniversário cercado(a) de gente e profundamente só",            c:"#C4956A88"},
+  {v:"Solidão Social",     m:"🎊 Pano de Confetes",e:"🥳", t:"A festa estava cheia — mas ninguém perguntou de mim de verdade",                        c:"#C4956A88"},
+  {v:"Solidão Social",     m:"",                  e:"📞", t:"Já atendi uma ligação em que a pessoa falou muito — e não perguntou nada sobre mim",     c:"#C4956A88"},
+  {v:"Solidão Social",     m:"🏺 Antiquário",      e:"🖼️", t:"Na família, às vezes me sinto como objeto de antiquário: apreciado(a) na parede, não na mesa", c:"#C4956A88"},
+  {v:"Solidão Social",     m:"🫙 Cristaleira",     e:"💎", t:"Tenho muito a oferecer, mas guardei esse presente pra alguém que nunca foi buscá-lo",   c:"#C4956A88"},
+  {v:"Solidão Social",     m:"",                  e:"👶", t:"Já recebi um beijo rápido de passagem de quem eu queria que ficasse mais um pouco",       c:"#C4956A88"},
+  {v:"Solidão Social",     m:"🗄️ Arquivo-Morto",  e:"📖", t:"Tenho histórias que ainda precisam ser ouvidas — e cansei de guardar só pra mim",       c:"#C4956A88"},
+  {v:"Solidão Social",     m:"",                  e:"❓", t:"Já quis que alguém perguntasse 'Como você está?' e esperasse — de verdade — a resposta", c:"#C4956A88"},
+  {v:"Solidão Social",     m:"🎊 Pano de Confetes",e:"✨", t:"Resolvi abrir o pano dos confetes e celebrar sozinho(a) mesmo — e foi bom!",             c:"#C4956A88"},
+  // EXISTENCIAL (8)
+  {v:"Solidão Existencial",m:"",                  e:"🌵", t:"Já percebi que estava cultivando espinhos onde poderiam ter crescido flores",             c:"#9B7DB688"},
+  {v:"Solidão Existencial",m:"🫙 Cristaleira",     e:"🫙", t:"Guardo minha alegria na cristaleira — esperando uma ocasião que é hoje, mas eu ainda não sei", c:"#9B7DB688"},
+  {v:"Solidão Existencial",m:"🗄️ Arquivo-Morto",  e:"😒", t:"Já me surpreendi revirando mágoas do arquivo-morto em vez de abrir janelas novas",      c:"#9B7DB688"},
+  {v:"Solidão Existencial",m:"",                  e:"🏰", t:"Já construí uma muralha pra me proteger — e percebi tarde que ela também me prendia",    c:"#9B7DB688"},
+  {v:"Solidão Existencial",m:"🏺 Antiquário",      e:"⏳", t:"Já me comportei como objeto de antiquário: valioso, mas tratando a própria vida como exposição", c:"#9B7DB688"},
+  {v:"Solidão Existencial",m:"🎊 Pano de Confetes",e:"🧹", t:"Já varri os confetes em vez de espalhar — achei que ninguém ia celebrar comigo",        c:"#9B7DB688"},
+  {v:"Solidão Existencial",m:"",                  e:"💡", t:"Tive um momento em que percebi: sou eu que afasto as pessoas — e escolhi mudar",         c:"#9B7DB688"},
+  {v:"Solidão Existencial",m:"🫙 Cristaleira",     e:"🌸", t:"Decidi abrir a cristaleira, usar a porcelana boa e convidar a vida pra entrar",          c:"#9B7DB688"},
+];
+
+function makeCard(d, idx, offset) {
+  const el = document.createElement('div');
+  el.className = 'card' + (offset > 0 ? ' sol' : '');
+  el.style.setProperty('--cc', d.c);
+  el.innerHTML =
+    '<div class="chk">✓</div>' +
+    '<div class="card-verb">' + d.v + '</div>' +
+    (d.m ? '<div class="card-meta" style="color:' + d.c.slice(0,7) + '">' + d.m + '</div>' : '') +
+    '<div class="card-emoji">' + d.e + '</div>' +
+    '<div class="card-text">' + d.t + '</div>';
+  el.addEventListener('click', () => toggle(el, offset + idx));
+  return el;
+}
+
+function renderGrid(id, arr, offset) {
+  const g = document.getElementById(id);
+  arr.forEach((d, i) => g.appendChild(makeCard(d, i, offset)));
+}
+
+let marked = new Set();
+
+function toggle(el, i) {
+  if (marked.has(i)) { marked.delete(i); el.classList.remove('on'); }
+  else {
+    marked.add(i);
+    el.classList.add('on', 'bounce');
+    setTimeout(() => el.classList.remove('bounce'), 420);
+  }
+  updateScore();
+}
+
+function updateScore() {
+  const b1 = [...marked].filter(x => x < 35).length;
+  const b2 = [...marked].filter(x => x >= 35).length;
+  const tot = b1 + b2;
+  document.getElementById('c1').textContent = b1;
+  document.getElementById('c2').textContent = b2;
+  document.getElementById('ct').textContent = tot;
+
+  const box = document.getElementById('rbox');
+  const tit = document.getElementById('rtitle');
+  const sub = document.getElementById('rsub');
+  if (tot === 0) { box.classList.remove('vis'); return; }
+  box.classList.add('vis');
+
+  if (tot <= 14) {
+    tit.textContent = '🌱 A vida está te chamando — basta ir chegando';
+    sub.textContent = tot + ' casas. Cada uma é um passo de volta pra si mesmo(a).';
+  } else if (tot <= 28) {
+    tit.textContent = '🌻 Florescendo com honestidade!';
+    sub.textContent = tot + ' marcações. Você tem coragem de olhar pra dentro e pra fora ao mesmo tempo.';
+  } else if (tot <= 42) {
+    tit.textContent = '🌳 Raízes fundas, frutos reais!';
+    sub.textContent = tot + ' casas! Você conhece seus espinhos — e escolheu cultivar flores.';
+  } else if (tot <= 56) {
+    tit.textContent = '🔥 Uma vida com fogo aceso!';
+    sub.textContent = tot + ' marcações. A cristaleira está aberta. Os confetes, no ar.';
+    confetti();
+  } else if (tot < 70) {
+    tit.textContent = '🏆 Quase 70+! Força total!';
+    sub.textContent = 'Só faltam ' + (70 - tot) + ' casas. Que jornada extraordinária.';
+    confetti();
+  } else {
+    tit.textContent = '🎉 BINGO 70+! A vida inteira marcada!';
+    sub.textContent = '70 de 70! Você viveu, acolheu, se reconheceu e escolheu continuar. Isso é Longeslescência!';
+    confetti(true);
+  }
+}
+
+function confetti(big) {
+  const cols = ['#F4631E','#FFD166','#06D6A0','#7BA7BC','#9B7DB6','#FF6B9D','#C4956A','#8A9E7B'];
+  const n = big ? 90 : 40;
+  for (let i = 0; i < n; i++) setTimeout(() => {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.cssText = 'left:' + (Math.random()*100) + 'vw;top:0;background:' +
+      cols[Math.floor(Math.random()*cols.length)] +
+      ';animation-duration:' + (1.3+Math.random()*1.3) + 's;animation-delay:' + (Math.random()*.7) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3500);
+  }, i * 22);
+}
+
+function resetAll() {
+  marked = new Set();
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('on','bounce'));
+  ['c1','c2','ct'].forEach(id => document.getElementById(id).textContent = '0');
+  document.getElementById('rbox').classList.remove('vis');
+}
+
+renderGrid('g1', B1, 0);
+renderGrid('g2', B2, 35);
+</script>
+</body>
+</html>
